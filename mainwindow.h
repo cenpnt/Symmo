@@ -10,6 +10,7 @@
 #include <QAudioOutput>
 #include <QListWidget>
 #include <QInputDialog>
+#include <QIcon>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -49,6 +50,10 @@ private slots:
     void on_listWidget_Songs_in_Playlist_itemClicked(QListWidgetItem *item);
 
     void updateDuration(qint64 duration);
+
+    void skipToNextSong();
+
+    void BackToPreviousSong();
 
 private:
     Ui::MainWindow* ui;

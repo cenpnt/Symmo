@@ -330,9 +330,9 @@ QSlider::handle:horizontal {
     <widget class="QLabel" name="label_fileName">
      <property name="geometry">
       <rect>
-       <x>90</x>
+       <x>20</x>
        <y>50</y>
-       <width>211</width>
+       <width>271</width>
        <height>20</height>
       </rect>
      </property>
@@ -628,6 +628,10 @@ border-radius: 10px;</string>
         <height>281</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(255, 255, 255);
+font-size: 15px;</string>
+      </property>
      </widget>
     </widget>
     <widget class="QFrame" name="frame_6">
@@ -717,6 +721,10 @@ color: rgb(255,255,255);</string>
         <height>31</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true"> color: rgb(255, 255, 255);
+</string>
+      </property>
       <property name="text">
        <string>[number of songs]</string>
       </property>
@@ -729,6 +737,10 @@ color: rgb(255,255,255);</string>
         <width>49</width>
         <height>20</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"> color: rgb(255, 255, 255);
+</string>
       </property>
       <property name="text">
        <string>Tracks</string>

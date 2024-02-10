@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include <QIcon>
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -34,7 +33,7 @@ MainWindow::MainWindow(QWidget* parent)
     M_Player->setAudioOutput(audio_Output);
     M_Duration = M_Player->duration() / 1000;
 
-    //default volume
+    // Default volume
     ui->slider_SongVolume->setMinimum(0);
     ui->slider_SongVolume->setMaximum(100);
     ui->slider_SongVolume->setValue(50);
@@ -54,6 +53,12 @@ MainWindow::MainWindow(QWidget* parent)
 
     // Play song when clicked in Playlist
     connect(ui->listWidget_Songs_in_Playlist, &QListWidget::itemClicked, this, &MainWindow::on_listWidget_Songs_in_Playlist_itemClicked);
+
+    // Skip song button
+    connect(ui->pushButton_Skip, &QPushButton::clicked, this, &MainWindow::skipToNextSong);
+
+    // Back song button
+    connect(ui->pushButton_Back, &QPushButton::clicked, this, &MainWindow::BackToPreviousSong);
 }
 
 MainWindow::~MainWindow()
@@ -205,7 +210,7 @@ void MainWindow::addAllSongs() {
         QListWidgetItem *musicItem = new QListWidgetItem(fileName);
         ui->listWidget_Songs_in_Playlist->addItem(musicItem);
     }
-    ui->label_PlaylistName->setText("All");
+    ui->label_PlaylistName->setText("All Songs");
     setFileCountToLabel(directory, ui->label_TrackQuantity);
 }
 
@@ -215,7 +220,6 @@ void MainWindow::on_listWidget_Songs_in_Playlist_itemClicked(QListWidgetItem *it
     M_Player->setSource(QUrl::fromLocalFile(filePath));
 
     if(M_Player->mediaStatus() != QMediaPlayer::NoMedia) {
-        qDebug() << "Playing: " << filePath;
         M_Player->play();
     } else {
         qDebug() << "Error setting media source: " << M_Player->errorString();
@@ -224,6 +228,7 @@ void MainWindow::on_listWidget_Songs_in_Playlist_itemClicked(QListWidgetItem *it
     QString fileName = item->text();
     fileName = fileName.left(fileName.lastIndexOf('.'));
     ui->label_fileName->setText(fileName);
+    ui->toggleButton_PlayPause->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
 }
 
 void MainWindow::setFileCountToLabel(const QString &folderPath, QLabel *label)
@@ -232,4 +237,52 @@ void MainWindow::setFileCountToLabel(const QString &folderPath, QLabel *label)
     QFileInfoList fileInfoList = folderDir.entryInfoList(QDir::Files);
     int numFiles = fileInfoList.size();
     label->setText(QString::number(numFiles)); // Convert integer to QString
+}
+
+void MainWindow::skipToNextSong() {
+    // Get the current row
+    int currentRow = ui->listWidget_Songs_in_Playlist->currentRow();
+
+    // Get the number of items in the list widget
+    int itemCount = ui->listWidget_Songs_in_Playlist->count();
+
+    // Check if there are items in the list widget
+    if (itemCount > 0) {
+        int nextRow = (currentRow + 1) % itemCount;
+
+        // Select the next item in the list widget
+        ui->listWidget_Songs_in_Playlist->setCurrentRow(nextRow);
+
+        // Play the next song
+        QListWidgetItem *nextItem = ui->listWidget_Songs_in_Playlist->currentItem();
+
+        if (nextItem) {
+            QString fileName = nextItem->text();
+            ui->label_fileName->setText(fileName);
+            QString songFilePath = "/Users/pannatatsribusarakham/Documents/Music/" + nextItem->text() + ".mp3";
+            M_Player->setSource(QUrl::fromLocalFile(songFilePath));
+            M_Player->play();
+        }
+
+    }
+}
+
+void MainWindow::BackToPreviousSong() {
+    int currentRow = ui->listWidget_Songs_in_Playlist->currentRow();
+    int itemCount = ui->listWidget_Songs_in_Playlist->count();
+    if (itemCount > 0) {
+        int previousRow = (currentRow - 1) % itemCount;
+
+        ui->listWidget_Songs_in_Playlist->setCurrentRow(previousRow);
+
+        QListWidgetItem *previousItem = ui->listWidget_Songs_in_Playlist->currentItem();
+
+        if(previousItem) {
+            QString fileName = previousItem->text();
+            ui->label_fileName->setText(fileName);
+            QString songFilePath = "/Users/pannatatsribusarakham/Documents/Music/" + previousItem->text() + ".mp3";
+            M_Player->setSource(QUrl::fromLocalFile(songFilePath));
+            M_Player->play();
+        }
+    }
 }
