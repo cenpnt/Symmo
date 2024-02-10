@@ -403,7 +403,7 @@ border-radius: 10px;</string>
      <widget class="QLabel" name="label_Playlist">
       <property name="geometry">
        <rect>
-        <x>40</x>
+        <x>30</x>
         <y>20</y>
         <width>71</width>
         <height>24</height>
@@ -432,7 +432,7 @@ border-radius: 10px;</string>
      <widget class="QPushButton" name="pushButton_AddPlaylist">
       <property name="geometry">
        <rect>
-        <x>160</x>
+        <x>180</x>
         <y>10</y>
         <width>40</width>
         <height>40</height>
@@ -465,7 +465,7 @@ border-radius: 10px;</string>
      <widget class="QPushButton" name="pushButton_RemovePlaylist">
       <property name="geometry">
        <rect>
-        <x>220</x>
+        <x>230</x>
         <y>10</y>
         <width>40</width>
         <height>40</height>
@@ -511,6 +511,39 @@ border-radius: 10px;</string>
       </property>
       <property name="styleSheet">
        <string notr="true">color: rgb(255, 255, 255);</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_Songs">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>10</y>
+        <width>40</width>
+        <height>40</height>
+       </rect>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>40</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+    border: none;
+    border-radius: 20px; /* Adjust the border-radius for a smaller circle */
+    background-color: #86B6F6;
+    color: rgb(52, 51, 64);
+    min-width: 40px;    /* Adjust the size of the button */
+    max-width: 40px;
+    min-height: 40px;
+    max-height: 40px;
+    padding: 0px;
+}
+</string>
+      </property>
+      <property name="text">
+       <string/>
       </property>
      </widget>
     </widget>
@@ -586,6 +619,16 @@ border-radius: 10px;</string>
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
+     <widget class="QListWidget" name="listWidget_Songs_in_Playlist">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>30</y>
+        <width>531</width>
+        <height>281</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
     <widget class="QFrame" name="frame_6">
      <property name="geometry">
@@ -629,7 +672,7 @@ border-radius: 10px;</string>
      <widget class="QLabel" name="label_PlaylistName">
       <property name="geometry">
        <rect>
-        <x>20</x>
+        <x>30</x>
         <y>140</y>
         <width>141</width>
         <height>24</height>
@@ -682,9 +725,9 @@ color: rgb(255,255,255);</string>
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>200</y>
+        <y>196</y>
         <width>49</width>
-        <height>16</height>
+        <height>20</height>
        </rect>
       </property>
       <property name="text">

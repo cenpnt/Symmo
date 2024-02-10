@@ -44,14 +44,26 @@ private slots:
 
     void on_pushButton_RemovePlaylist_clicked();
 
+    void addAllSongs();
+
+    void on_listWidget_Songs_in_Playlist_itemClicked(QListWidgetItem *item);
+
+    void updateDuration(qint64 duration);
+
 private:
     Ui::MainWindow* ui;
+
     bool isMuted = false;
+
     bool isPaused = false;
+
     QMediaPlayer* M_Player;
+
     QAudioOutput* audio_Output;
+
     qint64 M_Duration;
-    void updateDuration(qint64 duration);
-    //QListWidgetItem* item_Song;
+
+    void setFileCountToLabel(const QString &folderPath, QLabel *label);
+
 };
 #endif // MAINWINDOW_H

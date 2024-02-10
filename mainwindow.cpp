@@ -48,6 +48,12 @@ MainWindow::MainWindow(QWidget* parent)
     connect(M_Player, &QMediaPlayer::positionChanged, this, &MainWindow::positionChanged);
 
     ui->slider_SongProgress->setRange(0, M_Player->duration() / 1000);
+
+    // Import songs from computer
+    connect(ui->pushButton_Songs, &QPushButton::clicked, this, &MainWindow::addAllSongs);
+
+    // Play song when clicked in Playlist
+    connect(ui->listWidget_Songs_in_Playlist, &QListWidget::itemClicked, this, &MainWindow::on_listWidget_Songs_in_Playlist_itemClicked);
 }
 
 MainWindow::~MainWindow()
@@ -73,7 +79,6 @@ void MainWindow::positionChanged(qint64 progress)
 
 void MainWindow::updateDuration(qint64 duration)
 {
-    QString timestr;
     if (duration || M_Duration) {
         QTime currentTime((duration / 3600) % 60, (duration / 60) % 60, duration % 60, (duration * 1000) % 1000);
         QTime totalTime((M_Duration / 3600) % 60, (M_Duration / 60) % 60, M_Duration % 60, (M_Duration * 1000) % 1000);
@@ -115,7 +120,6 @@ void MainWindow::on_toggleButton_PlayPause_clicked()
     }
 }
 
-
 void MainWindow::on_actionAdd_File_triggered()
 {
     QString file_name = QFileDialog::getOpenFileName(this, "Open a file", "", "Audio File (*.mp3)");
@@ -126,7 +130,9 @@ void MainWindow::on_actionAdd_File_triggered()
         if (M_Player->mediaStatus() != QMediaPlayer::NoMedia) {
             // Media loaded successfully
             QFileInfo fileInfo(file_name);
-            ui->label_fileName->setText(fileInfo.fileName());
+            QString fileNameWithoutExtension = fileInfo.fileName();
+            fileNameWithoutExtension = fileNameWithoutExtension.left(fileNameWithoutExtension.lastIndexOf('.')); // Remove the file extension
+            ui->label_fileName->setText(fileNameWithoutExtension);
         }
         else {
             // Handle error loading media
@@ -175,4 +181,55 @@ void MainWindow::on_pushButton_RemovePlaylist_clicked()
     // Remove the item from the list
     delete item;
 
+}
+
+void MainWindow::addAllSongs() {
+    // Clear the list widget first
+    ui->listWidget_Songs_in_Playlist->clear();
+
+    // Directory containing music files (change this to your desired directory)
+    QString directory = "/Users/pannatatsribusarakham/Documents/Music";
+
+    // Get all music files from the directory
+    QStringList musicFilters;
+    musicFilters << "*.mp3" << "*.wav";
+
+    QDir musicDir(directory);
+    QFileInfoList musicFiles = musicDir.entryInfoList(musicFilters, QDir::Files);
+
+    for (const QFileInfo &fileInfo : musicFiles) {
+        // Get the file name without extension
+        QString fileName = fileInfo.fileName();
+        fileName = fileName.left(fileName.lastIndexOf('.')); // Remove the file extension
+
+        QListWidgetItem *musicItem = new QListWidgetItem(fileName);
+        ui->listWidget_Songs_in_Playlist->addItem(musicItem);
+    }
+    ui->label_PlaylistName->setText("All");
+    setFileCountToLabel(directory, ui->label_TrackQuantity);
+}
+
+void MainWindow::on_listWidget_Songs_in_Playlist_itemClicked(QListWidgetItem *item)
+{
+    QString filePath = "/Users/pannatatsribusarakham/Documents/Music/" + item->text() + ".mp3";
+    M_Player->setSource(QUrl::fromLocalFile(filePath));
+
+    if(M_Player->mediaStatus() != QMediaPlayer::NoMedia) {
+        qDebug() << "Playing: " << filePath;
+        M_Player->play();
+    } else {
+        qDebug() << "Error setting media source: " << M_Player->errorString();
+    }
+
+    QString fileName = item->text();
+    fileName = fileName.left(fileName.lastIndexOf('.'));
+    ui->label_fileName->setText(fileName);
+}
+
+void MainWindow::setFileCountToLabel(const QString &folderPath, QLabel *label)
+{
+    QDir folderDir(folderPath);
+    QFileInfoList fileInfoList = folderDir.entryInfoList(QDir::Files);
+    int numFiles = fileInfoList.size();
+    label->setText(QString::number(numFiles)); // Convert integer to QString
 }
