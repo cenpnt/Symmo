@@ -59,6 +59,9 @@ MainWindow::MainWindow(QWidget* parent)
 
     // Back song button
     connect(ui->pushButton_Back, &QPushButton::clicked, this, &MainWindow::BackToPreviousSong);
+
+    // Skip when song end
+    connect(M_Player, &QMediaPlayer::mediaStatusChanged, this, &MainWindow::SkipWhenSongEnd);
 }
 
 MainWindow::~MainWindow()
@@ -211,7 +214,7 @@ void MainWindow::addAllSongs() {
         ui->listWidget_Songs_in_Playlist->addItem(musicItem);
     }
     ui->label_PlaylistName->setText("All Songs");
-    setFileCountToLabel(directory, ui->label_TrackQuantity);
+    setFileCountToLabel(directory, ui->label_TrackQuantity); // Set Track Quantity
 }
 
 void MainWindow::on_listWidget_Songs_in_Playlist_itemClicked(QListWidgetItem *item)
@@ -284,5 +287,11 @@ void MainWindow::BackToPreviousSong() {
             M_Player->setSource(QUrl::fromLocalFile(songFilePath));
             M_Player->play();
         }
+    }
+}
+
+void MainWindow::SkipWhenSongEnd(QMediaPlayer::MediaStatus status) {
+    if(status == QMediaPlayer::EndOfMedia) {
+        skipToNextSong();
     }
 }

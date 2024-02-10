@@ -55,6 +55,8 @@ private slots:
 
     void BackToPreviousSong();
 
+    void SkipWhenSongEnd(QMediaPlayer::MediaStatus status);
+
 private:
     Ui::MainWindow* ui;
 
